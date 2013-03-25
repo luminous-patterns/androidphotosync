@@ -25,11 +25,11 @@ import android.widget.TextView;
 
 public class UploadActivity extends Activity {
 
-	private Context context;
-	private ResponseReceiver receiver;
+	//private Context context;
 	
+	private ResponseReceiver receiver;
 	private SharedPreferences appPreferences;
-
+	
 	Uri sourceUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
 	/** Called when the activity is first created. */
@@ -40,10 +40,7 @@ public class UploadActivity extends Activity {
 		setContentView(R.layout.activity_upload);
 		
 		appPreferences = getSharedPreferences("com.dphoto.sync_preferences", MODE_PRIVATE);
-        
-//		Intent syncIntent = new Intent(this, SyncIntentService.class);
-//		startService(syncIntent);
-		
+       		
         IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
@@ -57,37 +54,37 @@ public class UploadActivity extends Activity {
 		
 		try {
 			
-	        String[] from = {MediaStore.MediaColumns.TITLE};
-	        int[] to = {android.R.id.text1};
+	        //String[] from = {MediaStore.MediaColumns.TITLE};
+	        //int[] to      = {android.R.id.text1};
+			//ListAdapter adapter       = new SimpleCursorAdapter( this, android.R.layout.simple_list_item_1, cursor, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 	        
-	        CursorLoader cursorLoader = new CursorLoader( this, sourceUri, null, null, null, MediaStore.Images.Media.TITLE);
-	        Cursor cursor = cursorLoader.loadInBackground();
+			
+			CursorLoader cursorLoader = new CursorLoader( this, sourceUri, null, null, null, MediaStore.Images.Media.TITLE);
+	        Cursor cursor             = cursorLoader.loadInBackground();     
 	        
-	        ListAdapter adapter = new SimpleCursorAdapter( this, android.R.layout.simple_list_item_1, cursor, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+	        String lastFileLocation   = appPreferences.getString("last_file_location","");
 	        
-	        String lastFileLocation = appPreferences.getString("last_file_location","");
-	        
-            Boolean loop = true;
-            Boolean sendFile = true;
+            Boolean loop      = true;
+            //Boolean sendFile  = true;
 	        cursor.moveToFirst();
-        	Log.d("HASLOCATION",lastFileLocation.isEmpty()?"No":"Yes");
+        	   
 	        while (loop) {
 	        	
 	        	String fileLocation = cursor.getString(1);
-        		Log.d("XXX",fileLocation);
-        		Log.d("XXX",lastFileLocation);
+	        		        	
 	        	if (!lastFileLocation.isEmpty()) {
-		        	if (fileLocation == lastFileLocation) {
-			        	Log.d("LASTFILE",lastFileLocation);
-		        		sendFile = false;
-						loop = false;
+		        	
+	        		if (fileLocation == lastFileLocation) {
+		        		//sendFile  = false;
+						loop      = false;
 		        		continue;
 		        	}
 	        	}
 	        	
-	        	Log.d("sync", "Looping: " + cursor.getString(1));
+	        	//Log.d("sync", "Looping: " + cursor.getString(1));
 	    		Intent syncIntent = new Intent(this, SyncIntentService.class);
 	    		syncIntent.putExtra("PARAM_FILE_LOCATION", fileLocation);
+	    		
 	    		startService(syncIntent);
 	    		
 				if (!cursor.moveToNext()) {
@@ -109,8 +106,7 @@ public class UploadActivity extends Activity {
 	}
 	
 	public void onBackClick(View view) {
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(this, MainActivity.class));
 		finish();
 	}
 	
@@ -119,8 +115,8 @@ public class UploadActivity extends Activity {
 	      "com.dphoto.intent.action.MESSAGE_PROCESSED";
 	   @Override
 	    public void onReceive(Context context, Intent intent) {
-	       TextView result = (TextView) findViewById(R.id.notificationArea);
-	       String text = intent.getStringExtra(SyncIntentService.PARAM_OUT_MSG);
+	       TextView result  = (TextView) findViewById(R.id.notificationArea);
+	       String text      = intent.getStringExtra(SyncIntentService.PARAM_OUT_MSG);
 	       result.setText(text);
 	    }
 	}

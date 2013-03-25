@@ -78,8 +78,8 @@ public class LoginActivity extends Activity {
 	// UI references.
 	private EditText mUsernameView;
 	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
+	private View     mLoginFormView;
+	private View     mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
 	@Override
@@ -92,7 +92,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mUsername = getIntent().getStringExtra(EXTRA_EMAIL);
+		mUsername     = getIntent().getStringExtra(EXTRA_EMAIL);	
 		mUsernameView = (EditText) findViewById(R.id.username);
 		mUsernameView.setText(mUsername);
 
@@ -237,7 +237,6 @@ public class LoginActivity extends Activity {
 			doUserCredentials = false;
 			sendFile = false;
 			apiCall = "user/xAuth";
-			
 			properties.put("user_id",mUsername);
 			properties.put("user_password",mPassword);
 			
@@ -252,8 +251,9 @@ public class LoginActivity extends Activity {
 			Boolean validResponse = false;
 			
 			try {
-				
+			
 				if (jsonResponse.has("status") && jsonResponse.getString("status") != "error") {
+		
 					JSONObject jsonAPIResult = jsonResponse.getJSONObject("result");
 					editor.putInt("dphoto_user_id", jsonAPIResult.getInt("user_id"));
 					editor.putString("dphoto_auth_token", jsonAPIResult.getString("auth_token"));

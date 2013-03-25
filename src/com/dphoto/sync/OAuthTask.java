@@ -45,10 +45,11 @@ import android.widget.ListAdapter;
 
 public class OAuthTask extends AsyncTask<Void, Void, Boolean> {
 
-	private Context context;
-	protected Boolean doUserCredentials = true;
+	private   Context     context;
+	protected Boolean     doUserCredentials = true;
 	protected InputStream bitmap;
-	protected Boolean sendFile = false;
+	protected String      OA_fileName;
+	protected Boolean     sendFile = false;
 
 	public Map<String, Object> properties;
 	public HttpResponse response;
@@ -59,16 +60,16 @@ public class OAuthTask extends AsyncTask<Void, Void, Boolean> {
 	
 	// DPHOTO API User credentials
 	protected Integer authUserId;
-	protected String authToken;
-	private String authChecksum;
+	protected String  authToken;
+	private String    authChecksum;
 	
 	// DPHOTO API Application credentials
-	private String apiGateway = "https://api.dphoto.com/";
-	protected String apiCall = "file/upload";
-	private String appKey = "faa5307c52a04612d40bc27ea42c9a83";
-	private String appSecret = "cce6c3f34af56905c6935288355164d4";
+	private String   apiGateway = "https://api.dphoto.com/";
+	protected String apiCall    = "file/upload";
+	private String   appKey     = "faa5307c52a04612d40bc27ea42c9a83";
+	private String   appSecret  = "cce6c3f34af56905c6935288355164d4";
 	
-	public String jsonString;
+	public String     jsonString;
 	public JSONObject jsonResponse;
 	
     public OAuthTask(Context mContext) {
@@ -107,6 +108,7 @@ public class OAuthTask extends AsyncTask<Void, Void, Boolean> {
 			
 			// Do some stuff with the file
 			if (sendFile) {
+			
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 //				bitmap.compress(CompressFormat.JPEG, 100, bos);
 //				byte[] data = bos.toByteArray();
@@ -116,12 +118,14 @@ public class OAuthTask extends AsyncTask<Void, Void, Boolean> {
 				   bos.write(b, 0, bytesRead);
 				}
 				byte[] bytes = bos.toByteArray();
-				reqEntity.addPart("file", new ByteArrayBody(bytes, "upload.jpg"));
+				Log.d("OAuthTask", "FILENAME >>> " + OA_fileName);
+				//reqEntity.addPart("file", new ByteArrayBody(bytes, "upload.jpg"));
+				reqEntity.addPart("file", new ByteArrayBody(bytes, OA_fileName));
 			}
 			
 			// Add other properties
 	    	for (String key : propKeys) { 
-	    		
+	    		Log.v("OAuthTask","<<<<<<<<<<<<<< 111 >>>>>>>>>>");
 	    		Object val = properties.get(key);
 	    		
 	    		if (val instanceof String || val instanceof Integer) {
@@ -146,10 +150,13 @@ public class OAuthTask extends AsyncTask<Void, Void, Boolean> {
 			}
 			
 			jsonString = s.toString();
+			
+			//Log.d("***","***");
+			Log.d("RESPONSE",jsonString);
+			
 			jsonResponse = new JSONObject(jsonString);
 			
-			Log.e("***","***");
-			Log.e("RESPONSE",s.toString());
+			
 		} catch (Exception e) {
 			// handle exception here
 			Log.e("*ERROR*",e.getClass().getName());
