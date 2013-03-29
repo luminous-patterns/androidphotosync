@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import com.dphoto.sync.LoginActivity.UserLoginTask;
-import com.dphoto.sync.UploadActivity.ResponseReceiver;
+//import com.dphoto.sync.UploadActivity.ResponseReceiver;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -65,11 +65,11 @@ public class SyncIntentService extends IntentService {
         String resultTxt = msg + " "
         + DateFormat.format("MM/dd/yy h:mmaa", System.currentTimeMillis());*/
         
-        Intent broadcastIntent = new Intent();
+        /*Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(PARAM_OUT_MSG, fileLocation);
-        sendBroadcast(broadcastIntent);
+        sendBroadcast(broadcastIntent);*/
         
 		try {
 			

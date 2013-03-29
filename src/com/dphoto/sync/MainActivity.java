@@ -32,9 +32,6 @@ public class MainActivity extends Activity {
 	private BroadcastReceiver     httpReceiver  = null;
 	private IntentFilter          httpFilter    = null;
 	
-	
-//	private MediaStore        files;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,15 +62,11 @@ public class MainActivity extends Activity {
 				}
 			};
 
-			appPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-
-			/*startActivity(new Intent(this,UploadActivity.class));
-			files = MediaStore.Files.getContentUri(volumeName);*/
-			
-			
+			appPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);			
+		
 		}
 		
-		httpFilter   = new IntentFilter(FetchService.DATA);
+		httpFilter   = new IntentFilter(FetchAlbum.DATA);
 		httpReceiver = new BroadcastReceiver(){
 			public void onReceive(Context context, Intent intent) {
                 gotData(intent);
@@ -83,30 +76,20 @@ public class MainActivity extends Activity {
 	}
 	
 	private void startServices(){
-		Intent intent = new Intent(this,FetchService.class);
-		intent.putExtra("id", userId);
+		Intent intent = new Intent(this,FetchAlbum.class);
+		intent.putExtra("id",   userId);
 		intent.putExtra("token",appToken);
-		intent.putExtra("api",Config.API);
+		intent.putExtra("api",  Config.API_ALBUM);
 		startService(intent);
 	}
 	
 	private void stopServices(){
-	
-		stopService(new Intent(this,FetchService.class));
+		stopService(new Intent(this,FetchAlbum.class));
 	}
 	
 	private void gotData(Intent in){
 		Log.d("MainActivity", "<<<<<<<<<<<<<<<<<<<< GOT DATA  >>>>>>>>>>>>>> ");
-		int error   = in.getIntExtra(FetchService.ERROR, 1);
-		Log.d("MainActivity", "<<<<<<<<<<<<<<<<<<<< ERROR >>>>>>>>>>>>>> " +  error);
-		if(error == 0 )  {	
-			Utils.showToastNotification(this, "Downloaded Successfully");
-			stopServices();
-		}
-		else{	
-			Utils.showToastNotification(this, "Some Internet Problem"); 
-		}	
-		
+		stopServices();
 	}
 	
 	@Override

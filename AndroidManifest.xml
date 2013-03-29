@@ -41,7 +41,8 @@
             android:name="com.dphoto.sync.UploadActivity"
             android:label="Upload activity" >
         </activity>
-       <service android:name="com.dphoto.sync.FetchService"></service> 
+       <service android:name="com.dphoto.sync.FetchAlbum"></service>
+       <service android:name="com.dphoto.sync.PhotoSyncService"></service> 
     </application>
 
 </manifest>

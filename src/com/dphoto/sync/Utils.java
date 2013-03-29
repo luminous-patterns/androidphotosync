@@ -27,15 +27,6 @@ public class Utils {
         toast.show();
     }
 	
-	/*
-	*Function call() will make call to phone.
-	*/
-	public static void call(Context context, String tel){
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + tel ));
-		context.startActivity(callIntent);
-	}
-	
 	/**
      * function will check if the phone is connected to internet
      **/
