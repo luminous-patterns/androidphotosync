@@ -1,3 +1,7 @@
+/*
+ * PhotoSync Service Sync the Phone Gallery images to Dphoto Album
+ */
+
 package com.dphoto.sync;
 
 import java.io.BufferedReader;
@@ -98,6 +102,7 @@ public class PhotoSyncService extends Service implements Runnable{
 		authUserId     = intent.getIntExtra("id", 0);
 		authToken      = intent.getStringExtra("token");
 		API            = intent.getStringExtra("api");	
+	
 		
 		/*
 		 * image file paths of phone gallery
@@ -110,6 +115,7 @@ public class PhotoSyncService extends Service implements Runnable{
         properties = new HashMap<String, Object>();
         properties.put("app_key", Config.APP_KEY);
         properties.put("album_id", Config.ALBUM_ID);
+              
         
         if (doUserCredentials) {
             properties.put("auth_token", authToken);
@@ -145,18 +151,16 @@ public class PhotoSyncService extends Service implements Runnable{
 			while (st.hasMoreElements()) {
 					
 				String location  = st.nextElement().toString();
-				Log.v(TAG, "FILES" + location);
-				
 				fileLocation =	location;
 				
 				Log.v("TAG", "FILE LOCATION " + fileLocation);
 				File file   = new File(fileLocation);
 				
-				fileName    = file.getName();	
+				fileName    = file.getName();
 				bm          = new FileInputStream(file);	
 			
 				String json  = sendPostRequest(Config.API_URL,API);
-				
+				Log.v(TAG," JSON " + json);
 				JSONObject jsonResponse = new JSONObject(json);
 				
 				if (jsonResponse.has("status") && jsonResponse.getString("status") != "error") {
@@ -165,6 +169,7 @@ public class PhotoSyncService extends Service implements Runnable{
 				
 				intent. putExtra(ERROR,error);
 				Thread. sleep(Config.LOC_SLEEP);
+	
 			}
 		
 		}

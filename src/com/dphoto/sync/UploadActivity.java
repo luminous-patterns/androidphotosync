@@ -54,7 +54,7 @@ public class UploadActivity extends Activity {
 		username       = appPreferences.getString("dphoto_username","");
 		password       = appPreferences.getString("dphoto_password","");
 		appToken 	   = appPreferences.getString("dphoto_auth_token", "");
-	
+		
 		httpFilter   = new IntentFilter(PhotoSyncService.DATA);
 		httpReceiver = new BroadcastReceiver(){
 			public void onReceive(Context context, Intent intent) {
@@ -112,6 +112,7 @@ public class UploadActivity extends Activity {
 		intent.putExtra("id", userId);
 		intent.putExtra("token",appToken);
 		intent.putExtra("api",Config.API);
+		
 		intent.putExtra("filesList", files); //file paths of phone gallery
 		startService(intent);
 	}

@@ -29,9 +29,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import android.graphics.Bitmap;
-/*
-*
-*/
+
+/***********************************************************************************
+*FetchAlbum service send request to Dphoto server to get gallery contents.
+*From the Json response we fetch the album id and in future we can also fetch 
+*other album information such as file_title, file_url _file_id etc.     
+************************************************************************************/
 public class FetchAlbum extends Service implements Runnable{
 
 	private static final         String   TAG = "FetchAlbum";
@@ -53,6 +56,7 @@ public class FetchAlbum extends Service implements Runnable{
 	private   String  		     authChecksum;
 	protected Boolean     	     doUserCredentials = true;
 	private   String  		     API;
+	private   String  		     galleryID;
 
  	@Override
 	public IBinder onBind(Intent intent){
@@ -77,10 +81,10 @@ public class FetchAlbum extends Service implements Runnable{
 		authUserId = intent.getIntExtra("id", 0);
 		authToken  = intent.getStringExtra("token");
 		API        = intent.getStringExtra("api");
-        
+		galleryID  = intent.getStringExtra("galleryID");
         properties = new HashMap<String, Object>();
         properties.put("app_key", Config.APP_KEY);
-        properties.put("album_id",Config.ALBUM_ID);
+        properties.put("gallery_id",galleryID);
        
         if (doUserCredentials) {
             properties.put("auth_token", authToken);
@@ -247,9 +251,10 @@ public class FetchAlbum extends Service implements Runnable{
 				        
 				    JSONObject c = results.getJSONObject(i);
 				    String id         = c.getString("album_id");
-				    String fileName   = c.getString("file_title"); 
-				    album             = new Album(id, fileName);
-				    Globals.vctAlbum.add(album);
+				    //String fileName   = c.getString("file_title"); 
+				    //album             = new Album(id, fileName);
+				   
+				    Globals.vctAlbumID.add(id);
 				}
 			}
 			else {

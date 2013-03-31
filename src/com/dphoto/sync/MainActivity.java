@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this,FetchAlbum.class);
 		intent.putExtra("id",   userId);
 		intent.putExtra("token",appToken);
+		intent.putExtra("galleryID", username + ".dphoto.com");
 		intent.putExtra("api",  Config.API_ALBUM);
 		startService(intent);
 	}
@@ -89,6 +90,13 @@ public class MainActivity extends Activity {
 	
 	private void gotData(Intent in){
 		Log.d("MainActivity", "<<<<<<<<<<<<<<<<<<<< GOT DATA  >>>>>>>>>>>>>> ");
+
+/***********************************************************************************
+ * We may get more that one album id(when used FetchAblum Service), 
+ * So we are taking the first album id from vctAlbumID vector.
+***********************************************************************************/
+		Config.ALBUM_ID   =   Globals.vctAlbumID.get(0);
+		Log.v("MainActivity","Album ID::: " +  Config.ALBUM_ID);
 		stopServices();
 	}
 	
