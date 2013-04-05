@@ -38,13 +38,16 @@ public class UploadActivity extends Activity {
 	/*receivers for results */
 	private BroadcastReceiver     httpReceiver  = null;
 	private IntentFilter          httpFilter    = null;
-
+	
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload);
+		
+		
 		
 		appPreferences = getSharedPreferences("com.dphoto.sync_preferences", MODE_PRIVATE);
 		//editor         = appPreferences.edit();
@@ -69,6 +72,7 @@ public class UploadActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
+	
 		Log.v(TAG, "<<<<<<<<<<<<<< ON START >>>>>>>>>>>>>");
 		try {
 		
@@ -100,7 +104,7 @@ public class UploadActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		unregisterReceiver(httpReceiver);
-		stopServices();
+		stopServices();		
 	}
 	
 	private void startServices(){
@@ -110,10 +114,9 @@ public class UploadActivity extends Activity {
 		 * send Dphoto credentials to PhotoSyncService
 		 */
 		intent.putExtra("id", userId);
-		intent.putExtra("token",appToken);
-		intent.putExtra("api",Config.API);
-		
+		intent.putExtra("token",appToken);		
 		intent.putExtra("filesList", files); //file paths of phone gallery
+		intent.putExtra("galleryID", username + ".dphoto.com");
 		startService(intent);
 	}
 	

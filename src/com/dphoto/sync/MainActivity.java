@@ -1,5 +1,6 @@
 package com.dphoto.sync;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
@@ -17,15 +18,21 @@ import android.widget.Switch;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
-
+	
+	private final String TAG = "MainActivity";
+	Uri sourceUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+	
 	private OnSharedPreferenceChangeListener preferenceChangeListener;
-	private Editor            editor;
+	
 	private Switch            mSyncSwitchView;
+	
 	private SharedPreferences appPreferences;
 	private Integer           userId;
 	private String            username;
 	private String            password;
 	private String            appToken;
+	private Editor            editor;
+	
 	private Context           context;
 	
 	/*receivers for results */
@@ -38,7 +45,7 @@ public class MainActivity extends Activity {
 		
 		appPreferences = getSharedPreferences("com.dphoto.sync_preferences", MODE_PRIVATE);
 		editor         = appPreferences.edit();
-		
+				
 		userId         = appPreferences.getInt("dphoto_user_id",0);
 		username       = appPreferences.getString("dphoto_username","");
 		password       = appPreferences.getString("dphoto_password","");
@@ -50,7 +57,7 @@ public class MainActivity extends Activity {
 			finish();
 		}
 		else {
-		
+			
 			setContentView(R.layout.activity_main);
 			
 			mSyncSwitchView = (Switch) findViewById(R.id.switchSyncEnabled);
@@ -66,52 +73,58 @@ public class MainActivity extends Activity {
 		
 		}
 		
-		httpFilter   = new IntentFilter(FetchAlbum.DATA);
+		httpFilter   = new IntentFilter(PhotoSyncService.DATA);
 		httpReceiver = new BroadcastReceiver(){
 			public void onReceive(Context context, Intent intent) {
                 gotData(intent);
             }
         };
+        
+        registerReceiver(httpReceiver, httpFilter);
 			
 	}
 	
 	private void startServices(){
-		Intent intent = new Intent(this,FetchAlbum.class);
-		intent.putExtra("id",   userId);
-		intent.putExtra("token",appToken);
+		
+		Intent intent = new Intent(this,PhotoSyncService.class);
+		
+		/*
+		 * send Dphoto credentials to PhotoSyncService
+		 */
+		intent.putExtra("id", userId);
+		intent.putExtra("token",appToken);		
 		intent.putExtra("galleryID", username + ".dphoto.com");
-		intent.putExtra("api",  Config.API_ALBUM);
 		startService(intent);
 	}
 	
 	private void stopServices(){
-		stopService(new Intent(this,FetchAlbum.class));
+		stopService(new Intent(this,PhotoSyncService.class));
 	}
 	
 	private void gotData(Intent in){
 		Log.d("MainActivity", "<<<<<<<<<<<<<<<<<<<< GOT DATA  >>>>>>>>>>>>>> ");
-
-/***********************************************************************************
- * We may get more that one album id(when used FetchAblum Service), 
- * So we are taking the first album id from vctAlbumID vector.
-***********************************************************************************/
-		Config.ALBUM_ID   =   Globals.vctAlbumID.get(0);
-		Log.v("MainActivity","Album ID::: " +  Config.ALBUM_ID);
 		stopServices();
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
-		startServices();
-		registerReceiver(httpReceiver, httpFilter);
+		
+		Log.v(TAG, "<<<<<<<<<<<<<< ON START >>>>>>>>>>>>>");
+		try {
+        	startServices();
+	        
+		} catch (Exception e) {
+			Log.e(e.getClass().getName(), e.getMessage());
+		}
+		
 	}
 	
 	@Override
 	public void onStop() {
 		super.onStop();
 		unregisterReceiver(httpReceiver);
-		stopServices();
+		stopServices();	
 	}
 	
 	@Override
@@ -127,8 +140,8 @@ public class MainActivity extends Activity {
 	}
 	
 	public void onUploadClicked(View view) {
-		Intent intent = new Intent(this, UploadActivity.class);
-		startActivity(intent);
+		/*Intent intent = new Intent(this, UploadActivity.class);
+		startActivity(intent);*/
 	}
 	
 	public void onToggleClicked(View view) {

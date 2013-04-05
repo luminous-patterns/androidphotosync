@@ -81,6 +81,7 @@ public class FetchAlbum extends Service implements Runnable{
 		authUserId = intent.getIntExtra("id", 0);
 		authToken  = intent.getStringExtra("token");
 		API        = intent.getStringExtra("api");
+		
 		galleryID  = intent.getStringExtra("galleryID");
         properties = new HashMap<String, Object>();
         properties.put("app_key", Config.APP_KEY);
@@ -242,19 +243,23 @@ public class FetchAlbum extends Service implements Runnable{
 	
 	private int getJson(String strJson){ 
 		try {
-			JSONObject jsonResponse = new JSONObject(strJson);
-			Album album;
+			JSONObject jsonResponse = new JSONObject(strJson);	
 			if (jsonResponse.has("status") && jsonResponse.getString("status") != "error") {
 					
 				JSONArray results =  jsonResponse.getJSONArray("result");
 				for(int i = 0; i < results.length(); i++){
 				        
-				    JSONObject c = results.getJSONObject(i);
+				    JSONObject c 	  = results.getJSONObject(i);
 				    String id         = c.getString("album_id");
-				    //String fileName   = c.getString("file_title"); 
+				 
+				    JSONObject album  = c.getJSONObject("album_cover");
+				    String fileName   = album.getString("file_title"); 
+				    
+				    
 				    //album             = new Album(id, fileName);
-				   
-				    Globals.vctAlbumID.add(id);
+				   Log.v(TAG,"<<<<<<<<<<< fileName :: " + fileName);
+				    
+				    //Globals.vctAlbumID.add(id);
 				}
 			}
 			else {
