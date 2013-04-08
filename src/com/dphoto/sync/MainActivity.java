@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void stopServices(){
-		stopService(new Intent(this,PhotoSyncService.class));
+		//stopService(new Intent(this,PhotoSyncService.class));
 	}
 	
 	private void gotData(Intent in){
